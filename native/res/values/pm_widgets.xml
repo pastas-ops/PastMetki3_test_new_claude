@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pm_w_chats">PastMetka: чаты</string>
+    <string name="pm_w_notes">PastMetka: заметки 3×3</string>
+    <string name="pm_w_notes2">PastMetka: заметки 2×2</string>
+    <string name="pm_w_notes4">PastMetka: заметки 4×4</string>
+    <string name="pm_w_deadline">PastMetka: дедлайны</string>
+    <string name="pm_w_quick">PastMetka: быстрые действия 4×1</string>
+    <string name="pm_w_quick2">PastMetka: заметка и календарь 2×1</string>
+    <string name="pm_w_plus">PastMetka: новая заметка 1×1</string>
+    <string name="pm_w_progress">PastMetka: выполнено сегодня 2×1</string>
+    <string name="pm_w_today">PastMetka: сегодня 1×2</string>
+    <string name="pm_w_quick22">PastMetka: быстрые действия 2×2</string>
+    <string name="pm_w_quick33">PastMetka: быстрые действия 3×3</string>
+</resources>

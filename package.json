@@ -1,0 +1,13 @@
+{
+  "name": "pastmetki",
+  "version": "1.0.10",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "6.1.2",
+    "@capacitor/cli": "6.1.2",
+    "@capacitor/core": "6.1.2",
+    "@capacitor/local-notifications": "^6.1.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0"
+  }
+}

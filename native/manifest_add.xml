@@ -1,0 +1,56 @@
+    <receiver android:name=".ChatsWidget" android:exported="true" android:label="@string/pm_w_chats">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_chats_info" />
+    </receiver>
+    <receiver android:name=".NotesWidget" android:exported="true" android:label="@string/pm_w_notes">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_notes_info" />
+    </receiver>
+    <receiver android:name=".Notes2Widget" android:exported="true" android:label="@string/pm_w_notes2">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_notes2_info" />
+    </receiver>
+    <receiver android:name=".Notes4Widget" android:exported="true" android:label="@string/pm_w_notes4">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_notes4_info" />
+    </receiver>
+    <receiver android:name=".DeadlineWidget" android:exported="true" android:label="@string/pm_w_deadline">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_deadline_info" />
+    </receiver>
+    <receiver android:name=".QuickWidget" android:exported="true" android:label="@string/pm_w_quick">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_quick_info" />
+    </receiver>
+    <receiver android:name=".Quick2Widget" android:exported="true" android:label="@string/pm_w_quick2">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_quick2_info" />
+    </receiver>
+    <receiver android:name=".PlusWidget" android:exported="true" android:label="@string/pm_w_plus">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_plus_info" />
+    </receiver>
+    <receiver android:name=".ProgressWidget" android:exported="true" android:label="@string/pm_w_progress">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_progress_info" />
+    </receiver>
+    <receiver android:name=".TodayWidget" android:exported="true" android:label="@string/pm_w_today">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_today_info" />
+    </receiver>
+    <receiver android:name=".Quick22Widget" android:exported="true" android:label="@string/pm_w_quick22">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_quick22_info" />
+    </receiver>
+    <receiver android:name=".Quick33Widget" android:exported="true" android:label="@string/pm_w_quick33">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+        <meta-data android:name="android.appwidget.provider" android:resource="@xml/pm_quick33_info" />
+    </receiver>
+    <service android:name=".MsgJobService" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="false" />
+    <service android:name=".ChatsService" android:permission="android.permission.BIND_REMOTEVIEWS" android:exported="false" />
+    <service android:name=".NotesService" android:permission="android.permission.BIND_REMOTEVIEWS" android:exported="false" />
+    <service android:name=".DeadlinesService" android:permission="android.permission.BIND_REMOTEVIEWS" android:exported="false" />
+    <activity android:name=".ToggleActivity" android:exported="false" android:excludeFromRecents="true" android:taskAffinity="" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    <activity android:name=".WidgetConfigActivity" android:exported="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.Material.NoActionBar">
+        <intent-filter><action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" /></intent-filter>
+    </activity>

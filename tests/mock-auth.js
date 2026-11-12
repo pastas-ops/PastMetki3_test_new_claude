@@ -1,0 +1,10 @@
+const st=window.__FB=window.__FB||{};
+export const getAuth=()=>({get currentUser(){return st.user?{...st.user,refreshToken:'rt123'}:null}});
+export const onAuthStateChanged=(a,cb)=>{st.authCb=cb;setTimeout(()=>cb(st.user||null),0);return()=>{}};
+export const signInWithEmailAndPassword=async(a,e,p)=>{st.user={uid:'u1',email:e};st.authCb(st.user);return{user:st.user}};
+export const createUserWithEmailAndPassword=async(a,e,p)=>{st.user={uid:'u1',email:e,delete:async()=>{}};st.authCb(st.user);return{user:st.user}};
+export const signOut=async()=>{st.user=null;st.authCb(null)};
+export const reauthenticateWithCredential=async()=>{};
+export const EmailAuthProvider={credential:()=>({})};
+export const updatePassword=async()=>{};
+export const deleteUser=async()=>{};
