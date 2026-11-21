@@ -1,7 +1,10 @@
 name: Build APK
 on:
   push:
+    branches: ['**']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,6 +17,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - name: Read version
+        id: v
+        run: echo "ver=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Insert repository name (used by in-app update check)
+        run: sed -i "s#__REPO__#${GITHUB_REPOSITORY}#" www/index.html
       - run: npm install
       - name: Prepare Android project (icon, version, permissions)
         run: bash native/prep.sh
@@ -21,7 +29,7 @@ jobs:
         id: wb
         continue-on-error: true
         run: python3 native/install.py && cd android && ./gradlew assembleDebug
-      - name: Verify APK (icon, version, widgets, permissions)
+      - name: Verify APK (icon, version, widgets, permissions, signature)
         if: steps.wb.outcome == 'success'
         run: bash native/verify.sh
       - name: Fallback build WITHOUT widgets (only if the widget build failed)
@@ -30,10 +38,24 @@ jobs:
           rm -rf android
           bash native/prep.sh
           cd android && ./gradlew assembleDebug
+      - name: Name the APK pastmetki-VERSION.apk
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk "pastmetki-${{ steps.v.outputs.ver }}.apk"
       - uses: actions/upload-artifact@v4
         with:
-          name: PastMetki-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: pastmetki-${{ steps.v.outputs.ver }}
+          path: pastmetki-${{ steps.v.outputs.ver }}.apk
+      - name: Release notes
+        if: steps.wb.outcome == 'success'
+        run: node -e "const j=require('./www/version.json');require('fs').writeFileSync('release.md',j.notes.map(x=>'- '+x).join('\n')+'\n')"
+      - name: Publish release (APK for in-app updates)
+        if: steps.wb.outcome == 'success'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.ver }}
+          name: PastMetki ${{ steps.v.outputs.ver }}
+          body_path: release.md
+          files: pastmetki-${{ steps.v.outputs.ver }}.apk
+          make_latest: true
       - name: Report widget build failure
         if: steps.wb.outcome == 'failure'
         run: |
