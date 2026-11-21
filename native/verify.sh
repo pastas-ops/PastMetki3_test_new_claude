@@ -11,4 +11,10 @@ unzip -l "$APK" | grep -q "ic_launcher" || { echo "::error::нет ресурс�
 for w in ChatsWidget NotesWidget Notes2Widget Notes4Widget DeadlineWidget QuickWidget Quick2Widget Quick22Widget Quick33Widget PlusWidget ProgressWidget TodayWidget ChatsService NotesService DeadlinesService ToggleActivity WidgetConfigActivity MsgJobService BIND_JOB_SERVICE appwidget.provider POST_NOTIFICATIONS SCHEDULE_EXACT_ALARM RECEIVE_BOOT_COMPLETED; do
   grep -q "$w" /tmp/manifest.txt || { echo "::error::в манифесте APK нет $w"; exit 1; }
 done
+APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1 || true)
+if [ -n "$APKSIGNER" ]; then
+  "$APKSIGNER" verify --print-certs "$APK" | tee /tmp/cert.txt || true
+  EXP=10fa543fb5fe807eb5c623105edad7e2a2258a93d1b954bf55fd6dd161e0edbc
+  grep -qi "$EXP" /tmp/cert.txt || echo "::warning::APK подписан НЕ ключом debug.keystore из проекта: поверх старой версии он может не установиться"
+fi
 echo "APK проверен: иконка, версия, 10 виджетов, настройка фона, разрешения"

@@ -34,6 +34,10 @@ public class DeadlinesService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int p) {
+            try { return build(p); } catch (Throwable t) { return new RemoteViews(c.getPackageName(), R.layout.widget_item_dl); }
+        }
+
+        RemoteViews build(int p) {
             RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_item_dl);
             JSONObject o = a.optJSONObject(p);
             if (o == null) return v;

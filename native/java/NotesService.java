@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -34,20 +37,43 @@ public class NotesService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int p) {
+            try {
+                return build(p);
+            } catch (Throwable t) {
+                // запасной вариант: простая строка, чтобы виджет никогда не показывал «Не удалось загрузить»
+                RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_item_chat);
+                JSONObject o = a.optJSONObject(p);
+                v.setTextViewText(R.id.name, o == null ? "" : o.optString("t"));
+                v.setViewVisibility(R.id.nw, View.GONE);
+                return v;
+            }
+        }
+
+        RemoteViews build(int p) {
             RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_item_note);
             JSONObject o = a.optJSONObject(p);
             if (o == null) return v;
             boolean done = o.optInt("d") == 1;
-            v.setTextViewText(R.id.t, o.optString("t"));
-            v.setTextColor(R.id.t, done ? 0xFF777788 : 0xFFFFFFFF);
+            String t = o.optString("t");
+            CharSequence tt = t;
+            if (done && t.length() > 0) {
+                SpannableString sp = new SpannableString(t);
+                sp.setSpan(new StrikethroughSpan(), 0, t.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tt = sp;
+            }
+            v.setTextViewText(R.id.t, tt);
+            v.setTextColor(R.id.t, done ? 0xFF8A8A9C : 0xFFFFFFFF);
             String s = o.optString("s");
             v.setTextViewText(R.id.s, s);
             v.setViewVisibility(R.id.s, s.length() > 0 ? View.VISIBLE : View.GONE);
+            String pr = o.optString("p");
+            v.setTextViewText(R.id.pr, pr);
+            v.setViewVisibility(R.id.pr, pr.length() > 0 && !done ? View.VISIBLE : View.GONE);
             v.setTextViewText(R.id.ck, done ? "✓" : "");
             v.setInt(R.id.ck, "setBackgroundResource", done ? R.drawable.pm_ck_on : R.drawable.pm_ck_off);
             int col = 0xFFFFC400;
             try { col = Color.parseColor(o.optString("c", "#FFC400")); } catch (Exception e) { }
-            v.setInt(R.id.bar, "setBackgroundColor", done ? 0x55FFFFFF : col);
+            v.setInt(R.id.bar, "setColorFilter", done ? 0x55FFFFFF : col);
             long id = o.optLong("i");
             Intent open = new Intent();
             open.setData(Uri.parse("pastmetki://note/" + id));

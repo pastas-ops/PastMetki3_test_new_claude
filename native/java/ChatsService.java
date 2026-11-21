@@ -34,6 +34,10 @@ public class ChatsService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int p) {
+            try { return build(p); } catch (Throwable t) { return new RemoteViews(c.getPackageName(), R.layout.widget_item_chat); }
+        }
+
+        RemoteViews build(int p) {
             RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_item_chat);
             JSONObject o = a.optJSONObject(p);
             if (o == null) return v;

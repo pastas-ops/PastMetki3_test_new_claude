@@ -5,8 +5,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Base64;
+import java.io.OutputStream;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -99,5 +105,39 @@ public class WidgetBridgePlugin extends Plugin {
         r.put("saved", PmData.sp(c).getLong("ts", 0));
         r.put("sync", PmData.sp(c).getString("sy_uid", "").length() > 0);
         call.resolve(r);
+    }
+
+    // Сохранение вложения в «Загрузки/PastMetki»; open=true: после сохранения открыть файл подходящим приложением.
+    @PluginMethod
+    public void saveFile(PluginCall call) {
+        try {
+            String name = call.getString("name", "file");
+            String mime = call.getString("mime", "application/octet-stream");
+            String data = call.getString("data", "");
+            boolean open = Boolean.TRUE.equals(call.getBoolean("open", false));
+            if (Build.VERSION.SDK_INT < 29) { call.reject("нужен Android 10 или новее"); return; }
+            byte[] b = Base64.decode(data, Base64.DEFAULT);
+            Context c = getContext();
+            ContentValues cv = new ContentValues();
+            cv.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+            cv.put(MediaStore.MediaColumns.MIME_TYPE, mime);
+            cv.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/PastMetki");
+            Uri uri = c.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+            if (uri == null) { call.reject("не удалось создать файл"); return; }
+            OutputStream os = c.getContentResolver().openOutputStream(uri);
+            os.write(b);
+            os.close();
+            if (open) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setDataAndType(uri, mime);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                try { c.startActivity(i); } catch (Exception e) { }
+            }
+            JSObject r = new JSObject();
+            r.put("uri", uri.toString());
+            call.resolve(r);
+        } catch (Exception e) {
+            call.reject(String.valueOf(e.getMessage()));
+        }
     }
 }

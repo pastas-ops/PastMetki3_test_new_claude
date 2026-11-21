@@ -12,8 +12,11 @@ export const onSnapshot=(r,cb)=>{const f=()=>{if(r.doc){const v=st.db[r.path];cb
 export const getDoc=async r=>{const v=st.db[r.path];return{exists:()=>v!==undefined,data:()=>v,id:r.id}};
 export const getDocs=async q=>{const d=run(q.cons?q:{col:q,cons:[]});return{docs:d,empty:!d.length,forEach:f=>d.forEach(f)}};
 export const getCountFromServer=async q=>{const d=run(q.cons?q:{col:q,cons:[]});const w=(q.cons||[]).find(c=>c.w&&c.w[1]==='>=');const n=d.filter(x=>!w||(x.data()[w.w[0]]||0)>=w.w[2]).length;return{data:()=>({count:n})}};
-export const setDoc=async(r,v,o)=>{st.db[r.path]=o&&o.merge?{...(st.db[r.path]||{}),...v}:v;emit()};
+export const setDoc=async(r,v,o)=>{st.db[r.path]=o&&(o.merge||o.mergeFields)?{...(st.db[r.path]||{}),...v}:v;emit()};
 export const arrayUnion=(...v)=>({__au:v});
 export const updateDoc=async(r,v)=>{const o={...(st.db[r.path]||{})};for(const k in v){const x=v[k];if(x&&x.__au)o[k]=[...new Set([...(o[k]||[]),...x.__au])];else o[k]=x}st.db[r.path]=o;emit()};
 export const deleteDoc=async r=>{delete st.db[r.path];emit()};
 export const writeBatch=()=>{const ops=[];return{set:(r,v,o)=>ops.push(()=>setDoc(r,v,o)),update:(r,v)=>ops.push(()=>updateDoc(r,v)),delete:r=>ops.push(()=>deleteDoc(r)),commit:async()=>{for(const f of ops)await f()}}};
+
+export const runTransaction=async(db,fn)=>{const w=[];const tx={get:async r=>{const v=st.db[r.path];return{exists:()=>v!==undefined,data:()=>v}},set:(r,v,o)=>w.push(()=>setDoc(r,v,o)),update:(r,v)=>w.push(()=>updateDoc(r,v))};const res=await fn(tx);for(const f of w)await f();return res};
+export const increment=n=>n;
