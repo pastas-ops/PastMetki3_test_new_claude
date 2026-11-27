@@ -4,12 +4,16 @@
 <title>PastMetki</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b12">
-<script>(function(){var L=[];function add(t){t=String(t||'').slice(0,300);if(L.indexOf(t)<0&&L.length<6)L.push(t)}
-addEventListener('error',function(e){var t=e&&e.target;add(t&&t!==window&&(t.src||t.href)?'Не загрузилось: '+(t.src||t.href):(e&&e.message||'ошибка')+(e&&e.lineno?' (строка '+e.lineno+')':''))},true);
-addEventListener('unhandledrejection',function(e){add('Ошибка: '+(e&&e.reason&&(e.reason.message||e.reason)))});
-setTimeout(function chk(){var sp=document.querySelector('.spl2');var o=document.getElementById('pmdiag');if(!sp){if(o)o.remove();setTimeout(chk,2000);return}
-if(!o&&sp){o=document.createElement('div');o.id='pmdiag';o.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:99999;background:#1b1b27;color:#fff;border:1px solid #FFC400;border-radius:16px;padding:14px;font:14px/1.4 sans-serif';document.body.appendChild(o)}
-if(o)o.innerHTML='<b>Приложение долго загружается</b><br>Проверьте интернет (нужен доступ к Google/Firebase). '+(L.length?'<br><small style="opacity:.8;word-break:break-all">'+L.join('<br>').replace(/</g,'&lt;')+'</small>':'')+'<br><button onclick="location.reload()" style="margin-top:10px;background:#FFC400;color:#000;border:0;border-radius:10px;padding:10px 16px;font-weight:700">Перезагрузить</button>';setTimeout(chk,2000)},10000)})()</script>
+<script>(function(){var L=[],sh=0;function add(t){t=String(t||'').slice(0,400);if(L.indexOf(t)<0&&L.length<6)L.push(t)}
+function show(h){var o=document.getElementById('pmdiag');if(!o){o=document.createElement('dialog');o.id='pmdiag';o.style.cssText='position:fixed;left:10px;right:10px;top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));margin:0;width:auto;z-index:99999;background:#1b1b27;color:#fff;border:1px solid #FFC400;border-radius:16px;padding:14px;font:14px/1.4 sans-serif;max-height:60vh;overflow:auto;user-select:text';(document.body||document.documentElement).appendChild(o)}
+o.innerHTML='<b>'+h+'</b>'+(L.length?'<br><small style="opacity:.9;word-break:break-all;user-select:text">'+L.join('<br>').replace(/</g,'&lt;')+'</small>':'')+'<br><small style="opacity:.7">WebView: '+(window.__pmwv||'?')+'</small>'+'<br><button onclick="location.reload()" style="margin-top:10px;margin-right:8px;background:#FFC400;color:#000;border:0;border-radius:10px;padding:10px 16px;font-weight:700">Перезагрузить</button><button onclick="document.getElementById(\'pmdiag\').remove()" style="margin-top:10px;background:#333;color:#fff;border:0;border-radius:10px;padding:10px 16px">Закрыть</button>';try{if(!o.open)o.showModal()}catch(x){o.setAttribute('open','')}}
+addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&(t.src||t.href)){add('Не загрузилось: '+(t.src||t.href))}else{add((e&&e.message||'ошибка')+(e&&e.lineno?' (строка '+e.lineno+':'+(e.colno||0)+')':'')+(e&&e.error&&e.error.stack?' '+String(e.error.stack).split('\n').slice(0,2).join(' '):''))}setTimeout(function(){show('Ошибка в приложении')},400)},true);
+addEventListener('unhandledrejection',function(e){var r=e&&e.reason;add('Ошибка: '+(r&&(r.message||r)))});
+var n=0;setInterval(function(){n++;var a=document.getElementById('app'),sp=document.querySelector('.spl2'),o=document.getElementById('pmdiag');
+if(n>2&&a&&!sp&&!a.querySelector('button')&&!a.querySelector('input')){show('Экран пустой')}
+if(sp&&n>4){show('Приложение долго загружается')}
+else if(o&&!L.length&&sp===null&&n>5&&a&&a.querySelector('button'))o.remove()},2000);
+try{var W=navigator.userAgent.match(/Chrome\/([\d.]+)/);window.__pmwv=W?W[1]:''}catch(e){}})()</script>
 <script>try{var _t=localStorage.getItem("pmth");document.documentElement.dataset.t=_t==="light"?"light":"dark"}catch(e){document.documentElement.dataset.t="dark"}</script>
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
