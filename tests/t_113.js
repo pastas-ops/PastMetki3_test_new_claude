@@ -81,4 +81,14 @@ const W=p=>p.waitForTimeout(250);
    ok('desktop: edit dialog circles fit in one row',await p.evaluate(()=>{const f=[...document.querySelectorAll('#dlg .nft .nfb')].map(x=>x.getBoundingClientRect());return f.length===4&&f.every(r=>Math.abs(r.top-f[0].top)<2)}));
    await p.screenshot({path:require('os').tmpdir()+'/pm_ed_desk.png'})}
   ok('desktop: no JS errors',e.length===0,e.join(' | '));await p.close()}
+ // ===== 5. регресс: медленный ответ Firebase (на телефоне) не должен оставлять пустой экран =====
+ {const {p,e}=await mk(browser,{wait:50});
+  await p.addInitScript(()=>{window.__AUTHDELAY=700});await p.reload();await p.evaluate(()=>{});await p.waitForTimeout(100);
+  await p.evaluate(()=>{window.__FB.user=null});await p.waitForTimeout(2500);
+  ok('slow auth, logged out: welcome screen has buttons (not empty)',await p.evaluate(()=>{const a=document.getElementById('app');return a.querySelectorAll('.wel button').length===2&&!document.querySelector('body>.wel')}));
+  ok('slow auth: no JS errors',e.length===0,e.join(' | '));await p.close()}
+ {const {p,e}=await mk(browser,{wait:50});
+  await p.addInitScript(()=>{window.__AUTHDELAY=800});await p.reload();await p.waitForTimeout(2500);
+  ok('slow auth, logged in: app shown, splash gone',await p.evaluate(()=>document.querySelectorAll('#app button').length>5&&!document.querySelector('.spl2')));
+  await p.close()}
  await browser.close();console.log('DONE')})();
