@@ -1,3 +1,7 @@
 UI-тесты (Playwright + заглушка Firebase). Запуск из папки tests:
   npm i -D playwright && npx playwright install chromium && node run.js
 Для 1.1.0: node t_main.js (60 проверок: даты пунктов, вложения, профиль, монеты, чат, плавное обновление; запуск из папки tests, нужен Playwright+Chromium: NODE_PATH=/opt/npm-tools/node_modules PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers). Файлы h111.js - общая обвязка, t_smoke.js - быстрый запуск. Старые run106-run110 устарели (не все проходят). Для старых версий есть ещё run106.js ... run110.js (node run110.js). Запускайте по одному. Тесты не проверяют Android-часть (виджеты, иконку, сборку APK): они проверяются шагами GitHub Actions.
+
+Для 1.1.1: node t_111.js (редактор заметки, окно файлов, время сервера, карточка друга). t_main.js теперь 88 проверок, все проходят.
+
+Для 1.1.1 часть 3: node t_113.js (кружки в окне редактирования заметки/сообщения и в поле ввода чата, клавиатура, файлы).

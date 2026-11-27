@@ -402,6 +402,14 @@ def f_cat():
 F.update(beads=f_beads(), laurel=f_laurel(), lace=f_lace(), stars=f_stars(), chain=f_chain(), sun=f_sun(), flower=f_flower(),
          zigzag=f_zigzag(), tech=f_tech(), s_yin=f_yin(), s_ball=f_ball(), s_planet=f_planet(), s_donut=f_donut(), s_cat=f_cat())
 
+# ---------------------------------------------------------------- 1.1.1 часть 2: дополнительные файлы генератора
+# decor_bg1.py (помощники + обычные фоны), decor_bg2.py (фоны сетов), decor_rings.py (кольца рамок сетов).
+# Они выполняются в этом же пространстве имён и дописывают B / F (одноимённые ключи заменяют старые версии выше).
+for _f in ('decor_bg1.py', 'decor_bg2.py', 'decor_rings.py'):
+    _p = os.path.join(os.path.dirname(os.path.abspath(__file__)), _f)
+    if os.path.exists(_p):
+        exec(compile(open(_p, encoding='utf-8').read(), _p, 'exec'))
+
 # ---------------------------------------------------------------- запись
 def build():
     out = ['/*DECOR-START*/:root{']

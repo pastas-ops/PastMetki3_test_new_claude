@@ -20,3 +20,6 @@ export const writeBatch=()=>{const ops=[];return{set:(r,v,o)=>ops.push(()=>setDo
 
 export const runTransaction=async(db,fn)=>{const w=[];const tx={get:async r=>{const v=st.db[r.path];return{exists:()=>v!==undefined,data:()=>v}},set:(r,v,o)=>w.push(()=>setDoc(r,v,o)),update:(r,v)=>w.push(()=>updateDoc(r,v))};const res=await fn(tx);for(const f of w)await f();return res};
 export const increment=n=>n;
+
+export const serverTimestamp=()=>({toMillis:()=>Date.now()+(window.__SKEW||0)});
+export const getDocFromServer=async r=>getDoc(r);

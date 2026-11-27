@@ -1,4 +1,4 @@
-// Общая обвязка тестов 1.1.0
+// Общая обвязка тестов 1.1.1
 const {chromium}=require('playwright');const fs=require('fs');
 const html=fs.readFileSync('../www/index.html','utf8');
 const M={app:fs.readFileSync('mock-app.js','utf8'),auth:fs.readFileSync('mock-auth.js','utf8'),fs:fs.readFileSync('mock-fs.js','utf8')};
@@ -10,7 +10,7 @@ const seed=(a)=>{const now=Date.now();
  window.__FB={user:{uid:'u1',email:'x'},db:{
   'profiles/u1':{name:'Алексей',login:'alex',av:'',inv:'ABC123',...(a.me||{})},
   'profiles/u2':{name:'Аня',login:'anya',av:'',inv:'ZZZ',bio:'Люблю чай',dec:{bg:'sunset',frame:'gold',skin:'violet',run:true,msg:'candy'},fn:7,fl:a.today,pid:5},
-  'users/u1':{s:{a:'g',tm:1,th:'dark',nf:1,tz:'Europe/Moscow',lv:'1.1.0',au:0},rd:{},sq:[],hist:[],notes:a.notes||[],...(a.user||{})},
+  'users/u1':{s:{a:'g',tm:1,th:'dark',nf:1,tz:'Europe/Moscow',lv:'1.1.1',au:0},rd:{},sq:[],hist:[],notes:a.notes||[],...(a.user||{})},
   'chats/u1|u2':{members:['u1','u2'],on:true,last:{x:'Привет',ts:now-1000,f:'u2'}},
   'chats/u1|u2/msgs/m1':{f:'u2',x:'Привет',k:[{text:'Пункт A',done:false,tm:'18:30'},{text:'Пункт B',done:false}],dn:false,ts:now-1000,due:''},
   ...(a.extra||{})}};

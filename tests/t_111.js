@@ -1,0 +1,31 @@
+// 1.1.1: редактор заметки (кружки, окно файлов), время с сервера, карточка друга. Запуск: node t_111.js
+const {chromium,mk,N,ok,TODAY,TOM,DB}=require('./h111.js');
+const fs=require('fs');fs.writeFileSync(require('os').tmpdir()+'/pm_f1.png',Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==','base64'));
+(async()=>{const browser=await chromium.launch();
+ let {p,e}=await mk(browser,{notes:[]});
+ await p.click('nav [data-i="n"]');await p.waitForTimeout(200);
+ await p.click('[data-a="qa"][data-i="note"]');await p.waitForTimeout(300);
+ await p.fill('[data-m="t"]','Тест');await p.fill('[data-m="d"]',TOM);await p.fill('[data-m="dt"]','09:30');
+ await p.fill('[data-m="i"][data-j="0"]','пункт');await p.fill('[data-m="idd"][data-j="0"]',TOM);await p.fill('[data-m="it"][data-j="0"]','18:45');
+ await p.click('[data-a="atmod"]');await p.waitForTimeout(300);
+ await p.setInputFiles('#dlg input[type=file]',require('os').tmpdir()+'/pm_f1.png');await p.waitForTimeout(800);
+ ok('modal stays open with thumbnail',await p.evaluate(()=>document.querySelector('dialog[open] .ati img')!==null));
+ await p.fill('#dlg [data-m="atl"]','example.com');await p.click('#dlg [data-a="atladd"]');await p.waitForTimeout(200);
+ ok('link added',await p.evaluate(()=>document.querySelectorAll('dialog[open] .atd').length===1));
+ await p.click('#dlg .x[data-a="atmx"]');await p.waitForTimeout(200);
+ ok('modal closed by X',await p.evaluate(()=>!document.querySelector('dialog[open]')));
+ await p.click('[data-a="add"]');await p.waitForTimeout(600);
+ const n=(await DB(p,'users/u1')).notes[0];
+ ok('note saved with date/time/item date/attachments',n.due===TOM&&n.dtm==='09:30'&&n.tasks[0].dd===TOM&&n.tasks[0].tm==='18:45'&&n.at.length===2,JSON.stringify(n).slice(0,300));
+ console.log(e.join('|'));await p.close();
+ // clock skew
+ ({p,e}=await mk(browser,{notes:[]}));
+ await p.addInitScript(()=>{window.__SKEW=120000});await p.reload();await p.waitForTimeout(1200);
+ await p.click('nav [data-i="s"]');await p.waitForTimeout(200);await p.click('[data-a="chat"]');await p.waitForTimeout(300);
+ await p.fill('[data-m="ct"]','привет');const t0=Date.now();await p.click('[data-a="send"]');await p.waitForTimeout(500);
+ const db=await p.evaluate(()=>window.__FB.db);const m=Object.entries(db).filter(([k,v])=>k.includes('/msgs/')&&v.x==='привет')[0][1];
+ ok('message ts uses server clock (+2 min)',Math.abs(m.ts-(t0+120000))<5000,m.ts-t0);
+ ok('friends row opens card',await (async()=>{await p.click('header.chh [data-a="back"]');await p.waitForTimeout(400);await p.click('nav [data-i="u"]');await p.waitForTimeout(400);await p.click('[data-a="acs"][data-i="fr"]');await p.waitForTimeout(300);await p.click('#frl .card');await p.waitForTimeout(400);return p.evaluate(()=>!!document.querySelector('dialog[open] .pc3 .pcx'))})());
+ await p.screenshot({path:require('os').tmpdir()+'/pm_fr.png'});
+ console.log(e.join('|'));
+ await browser.close()})();
