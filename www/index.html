@@ -4,6 +4,12 @@
 <title>PastMetki</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b12">
+<script>(function(){var L=[];function add(t){t=String(t||'').slice(0,300);if(L.indexOf(t)<0&&L.length<6)L.push(t)}
+addEventListener('error',function(e){var t=e&&e.target;add(t&&t!==window&&(t.src||t.href)?'Не загрузилось: '+(t.src||t.href):(e&&e.message||'ошибка')+(e&&e.lineno?' (строка '+e.lineno+')':''))},true);
+addEventListener('unhandledrejection',function(e){add('Ошибка: '+(e&&e.reason&&(e.reason.message||e.reason)))});
+setTimeout(function chk(){var sp=document.querySelector('.spl2');var o=document.getElementById('pmdiag');if(!sp){if(o)o.remove();setTimeout(chk,2000);return}
+if(!o&&sp){o=document.createElement('div');o.id='pmdiag';o.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:99999;background:#1b1b27;color:#fff;border:1px solid #FFC400;border-radius:16px;padding:14px;font:14px/1.4 sans-serif';document.body.appendChild(o)}
+if(o)o.innerHTML='<b>Приложение долго загружается</b><br>Проверьте интернет (нужен доступ к Google/Firebase). '+(L.length?'<br><small style="opacity:.8;word-break:break-all">'+L.join('<br>').replace(/</g,'&lt;')+'</small>':'')+'<br><button onclick="location.reload()" style="margin-top:10px;background:#FFC400;color:#000;border:0;border-radius:10px;padding:10px 16px;font-weight:700">Перезагрузить</button>';setTimeout(chk,2000)},10000)})()</script>
 <script>try{var _t=localStorage.getItem("pmth");document.documentElement.dataset.t=_t==="light"?"light":"dark"}catch(e){document.documentElement.dataset.t="dark"}</script>
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
